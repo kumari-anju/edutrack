@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}Students - EduTrack{% endblock %}
+
+{% block header_title %}Students{% endblock %}
+
+{% block header_actions %}
+<a href="{% url 'students:create' %}" class="sc-btn sc-btn-primary">Add New Student</a>
+{% endblock %}
+
+{% block content %}
+<div class="sc-card animate-fade-in">
+    <div class="sc-card-header d-flex justify-content-between align-items-center">
+        <h3>Student Records</h3>
+        <p class="text-secondary small mb-0">{{ students.count }} active accounts</p>
+    </div>
+    <div class="sc-table-container">
+        <table class="sc-table">
+            <thead>
+                <tr>
+                    <th>Student Name</th>
+                    <th>Email Address</th>
+                    <th>Grade</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in students %}
+                <tr>
+                    <td>
+                        <div class="d-flex align-items-center gap-3">
+                            <div style="width: 32px; height: 32px; background: var(--bg-surface-subtle); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; color: var(--action-primary);">
+                                {{ student.first_name|first }}{{ student.last_name|first }}
+                            </div>
+                            <a href="{% url 'students:detail' student.pk %}" class="fw-medium text-dark">{{ student.first_name }} {{ student.last_name }}</a>
+                        </div>
+                    </td>
+                    <td class="text-secondary">{{ student.email }}</td>
+                    <td><span class="sc-badge sc-badge-info">Grade {{ student.grade_level }}</span></td>
+                    <td>
+                        {% if student.is_active %}
+                        <span class="sc-badge sc-badge-success">Active</span>
+                        {% else %}
+                        <span class="sc-badge sc-badge-error">Inactive</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="d-flex gap-2">
+                            <a href="{% url 'students:update' student.pk %}" class="sc-btn sc-btn-secondary px-3 py-1 small">Edit</a>
+                            <a href="{% url 'students:delete' student.pk %}" class="sc-btn sc-btn-secondary px-3 py-1 small" style="color: var(--rose) !important; border-color: transparent;">Delete</a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center py-5 text-secondary">No students found. <a href="{% url 'students:create' %}">Add one?</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

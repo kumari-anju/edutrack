@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}Courses - EduTrack{% endblock %}
+
+{% block header_title %}Courses{% endblock %}
+
+{% block header_actions %}
+<a href="{% url 'courses:course_create' %}" class="sc-btn sc-btn-primary">
+    Add New Course
+</a>
+{% endblock %}
+
+{% block content %}
+<div class="sc-card animate-fade-in">
+    <div class="sc-card-header d-flex justify-content-between align-items-center">
+        <h3>Course Catalog</h3>
+        <p class="text-secondary small mb-0">{{ courses.count }} active programs</p>
+    </div>
+    <div class="sc-table-container">
+        <table class="sc-table">
+            <thead>
+                <tr>
+                    <th>Course Title</th>
+                    <th>Credits</th>
+                    <th>Created At</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for course in courses %}
+                <tr>
+                    <td class="fw-medium text-dark">{{ course.title }}</td>
+                    <td><span class="sc-badge sc-badge-info">{{ course.credits }} Credits</span></td>
+                    <td class="text-secondary small">{{ course.created_at|date:"M d, Y" }}</td>
+                    <td>
+                        <div class="d-flex gap-2">
+                            <a href="{% url 'courses:course_update' course.pk %}" class="sc-btn sc-btn-secondary px-3 py-1 small">Edit</a>
+                            <a href="{% url 'courses:course_delete' course.pk %}" class="sc-btn sc-btn-secondary px-3 py-1 small" style="color: var(--rose) !important; border-color: transparent;">Delete</a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center py-5 text-secondary">No courses found. <a href="{% url 'courses:course_create' %}">Create one?</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

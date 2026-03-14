@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}Profile - EduTrack{% endblock %}
+
+{% block header_title %}User Profile{% endblock %}
+
+{% block content %}
+<div class="sc-card animate-fade-in max-w-72ch mx-auto">
+    <div class="sc-card-header">
+        <h3>Account Information</h3>
+    </div>
+    <div class="sc-card-body">
+        <div class="row mb-4">
+            <div class="col-sm-4">
+                <div class="sc-label">Username</div>
+            </div>
+            <div class="col-sm-8">
+                <div class="h5 mb-0">{{ user.username }}</div>
+            </div>
+        </div>
+        
+        <div class="row mb-4">
+            <div class="col-sm-4">
+                <div class="sc-label">Email Address</div>
+            </div>
+            <div class="col-sm-8">
+                <div class="h5 mb-0">{{ user.email }}</div>
+            </div>
+        </div>
+
+        {% if user.userprofile %}
+        <div class="row mb-4">
+            <div class="col-sm-4">
+                <div class="sc-label">Bio</div>
+            </div>
+            <div class="col-sm-8">
+                <div class="text-secondary">{{ user.userprofile.bio|default:"No bio available" }}</div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="sc-label">Location</div>
+            </div>
+            <div class="col-sm-8">
+                <div class="text-secondary">{{ user.userprofile.location|default:"Not specified" }}</div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

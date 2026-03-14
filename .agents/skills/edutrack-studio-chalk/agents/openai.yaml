@@ -1,0 +1,4 @@
+interface:
+  display_name: "EduTrack Studio Chalk"
+  short_description: "Theme guide + anti-gravity UI rules"
+  default_prompt: "Apply the EduTrack Studio Chalk theme and anti-gravity rules to this UI implementation."

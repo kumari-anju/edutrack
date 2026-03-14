@@ -1,0 +1,4 @@
+interface:
+  display_name: "UV Run (EduTrack)"
+  short_description: "Use uv to install and run EduTrack locally."
+  default_prompt: "Set up and run EduTrack locally using uv."

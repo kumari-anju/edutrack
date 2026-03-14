@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Enrollments - EduTrack{% endblock %}
+
+{% block header_title %}Enrollments{% endblock %}
+
+{% block header_actions %}
+<a href="{% url 'enrollments:create' %}" class="sc-btn sc-btn-primary">
+    Enroll Student
+</a>
+{% endblock %}
+
+{% block content %}
+<div class="sc-card animate-fade-in">
+    <div class="sc-card-header d-flex justify-content-between align-items-center">
+        <h3>Recent Enrollments</h3>
+        <p class="text-secondary small mb-0">{{ enrollments.count }} active records</p>
+    </div>
+    <div class="sc-table-container">
+        <table class="sc-table">
+            <thead>
+                <tr>
+                    <th>Student</th>
+                    <th>Course</th>
+                    <th>Enrollment Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for enrollment in enrollments %}
+                <tr>
+                    <td class="fw-medium text-dark">{{ enrollment.student }}</td>
+                    <td class="text-secondary">{{ enrollment.course }}</td>
+                    <td class="text-secondary small">{{ enrollment.enrollment_date|date:"M d, Y" }}</td>
+                    <td>
+                        <span class="sc-badge sc-badge-{{ enrollment.status|lower }}">
+                            {{ enrollment.get_status_display }}
+                        </span>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center py-5 text-secondary">
+                        No enrollments found. <a href="{% url 'enrollments:create' %}">Enroll a student?</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

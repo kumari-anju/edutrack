@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block title %}Daily Attendance Report — EduTrack{% endblock %}
+
+{% block header_title %}Daily Attendance Report{% endblock %}
+
+{% block header_actions %}
+<a href="{% url 'attendance:mark' %}{% if selected_course %}?course={{ selected_course.pk }}&date={{ selected_date|date:'Y-m-d' }}{% endif %}" class="sc-btn sc-btn-primary">Mark Attendance</a>
+<a href="{% url 'attendance:student_report' %}" class="sc-btn sc-btn-secondary">Student Report</a>
+<a href="{% url 'attendance:monthly_report' %}" class="sc-btn sc-btn-secondary">Monthly Report</a>
+{% endblock %}
+
+{% block content %}
+<div class="row g-4 animate-fade-in">
+
+    {# ── Filters ── #}
+    <div class="col-12">
+        <div class="sc-card shadow-low">
+            <div class="sc-card-header">
+                <h4 class="m-0 h5">Filter</h4>
+            </div>
+            <div class="sc-card-body">
+                <form method="get" action="{% url 'attendance:daily_report' %}" class="row g-3 align-items-end">
+                    <div class="col-md-5">
+                        <label for="course" class="form-label sc-label">Course</label>
+                        <select name="course" id="course" class="form-select">
+                            <option value="">— All Courses —</option>
+                            {% for c in courses %}
+                            <option value="{{ c.pk }}" {% if selected_course and selected_course.pk == c.pk %}selected{% endif %}>{{ c.title }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="date" class="form-label sc-label">Date</label>
+                        <input type="date" name="date" id="date" class="form-control"
+                               value="{{ selected_date|date:'Y-m-d' }}">
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="sc-btn sc-btn-primary w-100">View Report</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {% if selected_course %}
+
+    {# ── Summary chips ── #}
+    <div class="col-12">
+        <div class="row g-3">
+            <div class="col-sm-3">
+                <div class="sc-card shadow-low text-center py-3">
+                    <div class="display-6 fw-bold" style="color:var(--sage);">{{ summary.present }}</div>
+                    <div class="sc-helper-text">Present</div>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="sc-card shadow-low text-center py-3">
+                    <div class="display-6 fw-bold" style="color:var(--rose);">{{ summary.absent }}</div>
+                    <div class="sc-helper-text">Absent</div>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="sc-card shadow-low text-center py-3">
+                    <div class="display-6 fw-bold" style="color:var(--gold);">{{ summary.late }}</div>
+                    <div class="sc-helper-text">Late</div>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="sc-card shadow-low text-center py-3">
+                    <div class="display-6 fw-bold" style="color:var(--sky);">{{ summary.total }}</div>
+                    <div class="sc-helper-text">Total Records</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# ── Records table ── #}
+    <div class="col-12">
+        <div class="sc-card shadow-mid">
+            <div class="sc-card-header d-flex justify-content-between align-items-center">
+                <h4 class="m-0 h5">
+                    {{ selected_course.title }}
+                    <span class="sc-helper-text ms-2">{{ selected_date|date:"D, d M Y" }}</span>
+                </h4>
+            </div>
+            <div class="sc-card-body p-0">
+                {% if records %}
+                <table class="sc-table w-100 mb-0">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Status</th>
+                            <th>Notes</th>
+                            <th>Recorded At</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for rec in records %}
+                        <tr>
+                            <td>
+                                <div class="fw-500" style="color:var(--charcoal);">
+                                    {{ rec.enrollment.student.first_name }} {{ rec.enrollment.student.last_name }}
+                                </div>
+                                <div class="sc-helper-text" style="font-size:0.78rem;">{{ rec.enrollment.student.email }}</div>
+                            </td>
+                            <td>
+                                {% if rec.status == 'PRESENT' %}
+                                <span class="sc-badge" style="background:#e8f5ec; color:var(--sage); border-radius:999px; padding:3px 12px; font-size:0.8rem;">Present</span>
+                                {% elif rec.status == 'ABSENT' %}
+                                <span class="sc-badge" style="background:#fdeef1; color:var(--rose); border-radius:999px; padding:3px 12px; font-size:0.8rem;">Absent</span>
+                                {% else %}
+                                <span class="sc-badge" style="background:#fef8e7; color:#b8860b; border-radius:999px; padding:3px 12px; font-size:0.8rem;">Late</span>
+                                {% endif %}
+                            </td>
+                            <td class="sc-helper-text">{{ rec.notes|default:"—" }}</td>
+                            <td class="sc-helper-text">{{ rec.recorded_at|date:"H:i" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="p-4 text-center">
+                    <p class="sc-helper-text mb-0">No attendance records found for this date.</p>
+                    <a href="{% url 'attendance:mark' %}?course={{ selected_course.pk }}&date={{ selected_date|date:'Y-m-d' }}"
+                       class="sc-btn sc-btn-primary mt-3">Mark Attendance Now</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    {% else %}
+    <div class="col-12">
+        <div class="sc-card shadow-low text-center p-5" style="border-style:dashed;">
+            <p class="sc-helper-text mb-0">Select a course and date above to view the daily report.</p>
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

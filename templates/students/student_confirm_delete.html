@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete Student - EduTrack{% endblock %}
+
+{% block header_title %}Confirm Deletion{% endblock %}
+
+{% block content %}
+<div class="sc-card animate-fade-in" style="max-width: 500px; margin: 0 auto; border-color: var(--rose);">
+    <div class="sc-card-header" style="background: rgba(201, 94, 118, 0.05); border-bottom-color: rgba(201, 94, 118, 0.2);">
+        <h3 style="margin: 0; font-size: 1.25rem; color: var(--rose);">Confirm Permanent Deletion</h3>
+    </div>
+    <div class="sc-card-body">
+        <p style="font-size: 1.125rem; margin-bottom: 2rem; line-height: 1.6;">
+            Are you sure you want to permanently delete the record for <strong>{{ object.first_name }} {{ object.last_name }}</strong>? This action cannot be undone.
+        </p>
+
+        <form method="post">
+            {% csrf_token %}
+            <div style="display: flex; gap: 1rem;">
+                <button type="submit" class="sc-btn" style="background: var(--rose); color: var(--paper);">Yes, Delete Student</button>
+                <a href="{% url 'students:detail' object.pk %}" class="sc-btn sc-btn-secondary">Keep Record</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

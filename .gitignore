@@ -1,0 +1,67 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+*.egg
+
+# Virtual environments
+.venv
+venv/
+ENV/
+
+# Database
+db.sqlite3
+*.db
+
+# Static/Media
+/static_root/
+/media/
+
+# Environment variables
+.env
+.env.*
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+._*
+
+# Logs
+*.log
+
+# Secrets and Credentials
+*.pem
+*.key
+*.cert
+*.crt
+client_secret.json
+credentials.json
+.netrc
+client_secrets.json
+auth.json
+secrets.yml
+
+# Testing
+.pytest_cache/
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+coverage.xml
+
+# Celery/Redis
+celerybeat-schedule
+celerybeat.pid
+
+# Jupyter Notebooks
+.ipynb_checkpoints

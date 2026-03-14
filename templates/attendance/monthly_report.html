@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block title %}Monthly Attendance Report — EduTrack{% endblock %}
+
+{% block header_title %}Monthly Attendance Report{% endblock %}
+
+{% block header_actions %}
+<a href="{% url 'attendance:mark' %}{% if selected_course %}?course={{ selected_course.pk }}{% endif %}" class="sc-btn sc-btn-primary">Mark Attendance</a>
+<a href="{% url 'attendance:student_report' %}" class="sc-btn sc-btn-secondary">Student Report</a>
+<a href="{% url 'attendance:daily_report' %}" class="sc-btn sc-btn-secondary">Daily Report</a>
+{% endblock %}
+
+{% block content %}
+<div class="row g-4 animate-fade-in">
+
+    {# ── Filters ── #}
+    <div class="col-12">
+        <div class="sc-card shadow-low">
+            <div class="sc-card-header">
+                <h4 class="m-0 h5">Filter</h4>
+            </div>
+            <div class="sc-card-body">
+                <form method="get" action="{% url 'attendance:monthly_report' %}" class="row g-3 align-items-end">
+                    <div class="col-md-5">
+                        <label for="course" class="form-label sc-label">Course</label>
+                        <select name="course" id="course" class="form-select">
+                            <option value="">— Choose a course —</option>
+                            {% for c in courses %}
+                            <option value="{{ c.pk }}" {% if selected_course and selected_course.pk == c.pk %}selected{% endif %}>{{ c.title }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="month" class="form-label sc-label">Month</label>
+                        <input type="month" name="month" id="month" class="form-control"
+                               value="{{ month_str }}">
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="sc-btn sc-btn-primary w-100">View Report</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {% if selected_course %}
+
+    {# ── Report table ── #}
+    <div class="col-12">
+        <div class="sc-card shadow-mid">
+            <div class="sc-card-header d-flex justify-content-between align-items-center">
+                <h4 class="m-0 h5">
+                    {{ selected_course.title }}
+                    <span class="sc-helper-text ms-2">{{ selected_month|date:"F Y" }}</span>
+                </h4>
+                <span class="sc-helper-text">{{ student_stats|length }} student(s)</span>
+            </div>
+            <div class="sc-card-body p-0">
+                {% if student_stats %}
+                <table class="sc-table w-100 mb-0">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th class="text-center">Present</th>
+                            <th class="text-center">Absent</th>
+                            <th class="text-center">Late</th>
+                            <th class="text-center">Total Sessions</th>
+                            <th class="text-center">Attendance %</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for stat in student_stats %}
+                        <tr>
+                            <td>
+                                <div class="fw-500" style="color:var(--charcoal);">
+                                    {{ stat.student.first_name }} {{ stat.student.last_name }}
+                                </div>
+                                <div class="sc-helper-text" style="font-size:0.78rem;">{{ stat.student.email }}</div>
+                            </td>
+                            <td class="text-center" style="color:var(--sage); font-weight:600;">{{ stat.present }}</td>
+                            <td class="text-center" style="color:var(--rose); font-weight:600;">{{ stat.absent }}</td>
+                            <td class="text-center" style="color:#b8860b; font-weight:600;">{{ stat.late }}</td>
+                            <td class="text-center sc-helper-text">{{ stat.total }}</td>
+                            <td class="text-center">
+                                {% if stat.attendance_pct is not None %}
+                                    {% if stat.attendance_pct >= 75 %}
+                                    <span class="sc-badge" style="background:#e8f5ec; color:var(--sage); border-radius:999px; padding:3px 12px; font-size:0.82rem; font-weight:600;">
+                                        {{ stat.attendance_pct }}%
+                                    </span>
+                                    {% elif stat.attendance_pct >= 50 %}
+                                    <span class="sc-badge" style="background:#fef8e7; color:#b8860b; border-radius:999px; padding:3px 12px; font-size:0.82rem; font-weight:600;">
+                                        {{ stat.attendance_pct }}%
+                                    </span>
+                                    {% else %}
+                                    <span class="sc-badge" style="background:#fdeef1; color:var(--rose); border-radius:999px; padding:3px 12px; font-size:0.82rem; font-weight:600;">
+                                        {{ stat.attendance_pct }}%
+                                    </span>
+                                    {% endif %}
+                                {% else %}
+                                <span class="sc-helper-text">No records</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="p-4 text-center">
+                    <p class="sc-helper-text mb-0">No attendance records found for this course in {{ selected_month|date:"F Y" }}.</p>
+                    <a href="{% url 'attendance:mark' %}?course={{ selected_course.pk }}"
+                       class="sc-btn sc-btn-primary mt-3">Start Marking Attendance</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    {% else %}
+    <div class="col-12">
+        <div class="sc-card shadow-low text-center p-5" style="border-style:dashed;">
+            <p class="sc-helper-text mb-0">Select a course and month above to view the monthly report.</p>
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}EduTrack{% endblock %}</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap CSS Baseline -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Studio Chalk Theme -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/studio-chalk.css' %}">
+
+</head>
+<body>
+    <div class="sc-auth-layout">
+        <div class="sc-auth-container">
+            <div class="mb-3">
+                <button onclick="history.back()" class="btn btn-sm btn-link text-decoration-none text-secondary p-0">&larr; Back</button>
+            </div>
+            <div class="text-center mb-5 animate-fade-in">
+                <a href="{% url 'landing' %}" class="d-inline-flex align-items-center text-decoration-none" style="transition: opacity 0.2s;" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">
+                    <img src="{% static 'images/logo.png' %}" alt="EduTrack Logo" style="height: 40px; width: auto;" class="me-2">
+                    <span class="fs-2 fw-bold text-dark" style="font-family: var(--font-heading); line-height: 1;">EduTrack</span>
+                </a>
+            </div>
+            
+            <div class="sc-auth-card">
+                <div class="text-center mb-4">
+                    <h2 class="h3 font-heading">{% block auth_title %}{% endblock %}</h2>
+                    <p class="text-secondary">{% block auth_subtitle %}{% endblock %}</p>
+                </div>
+
+                <div class="sc-form">
+                    {% block content %}{% endblock %}
+                </div>
+            </div>
+
+            <div class="text-center mt-4 animate-fade-in">
+                {% block auth_footer %}{% endblock %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,190 @@
+{% extends 'public_base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+    /* Landing Page Specific Rules, enforcing Studio Chalk */
+    .sc-hero-section {
+        background-color: var(--chalk);
+        padding: 160px 0 120px;
+    }
+    .sc-hero-title {
+        font-family: var(--font-heading);
+        color: var(--charcoal);
+        font-size: 4rem;
+        line-height: 1.1;
+        margin-bottom: 1.5rem;
+        letter-spacing: -0.02em;
+    }
+    .sc-hero-subtitle {
+        font-family: var(--font-body);
+        color: var(--ink-soft);
+        font-size: 1.35rem;
+        margin-bottom: 2.5rem;
+        max-width: 650px;
+        margin-left: auto;
+        margin-right: auto;
+        line-height: 1.6;
+    }
+    
+    .sc-features-section {
+        background-color: var(--paper);
+        padding: 100px 0;
+        border-top: 1px solid var(--line);
+    }
+    
+    .sc-feature-card {
+        background-color: var(--chalk);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-card);
+        padding: 2.5rem;
+        box-shadow: var(--shadow-low);
+        height: 100%;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .sc-feature-card:hover {
+        transform: translateY(-6px);
+        box-shadow: var(--shadow-mid);
+    }
+    
+    .sc-testimonials-section {
+        background-color: var(--chalk-deep);
+        padding: 100px 0;
+        border-top: 1px solid var(--line);
+    }
+    .sc-testimonial-card {
+        background-color: var(--paper);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-card);
+        padding: 2.5rem;
+        box-shadow: var(--shadow-low);
+        position: relative;
+    }
+    .sc-testimonial-quote {
+        font-family: var(--font-heading);
+        font-style: italic;
+        color: var(--charcoal);
+        font-size: 1.25rem;
+        margin-bottom: 2rem;
+        line-height: 1.6;
+    }
+    
+    .sc-footer {
+        background-color: var(--charcoal);
+        color: var(--chalk);
+        padding: 80px 0 40px;
+    }
+    .sc-footer a {
+        color: var(--line);
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+    .sc-footer a:hover {
+        color: var(--action-primary);
+        text-decoration: none;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="sc-hero-section text-center">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h1 class="sc-hero-title">Elevate Your Classroom Experience</h1>
+                <p class="sc-hero-subtitle">EduTrack is the premium, intelligent platform designed to streamline attendance, course management, and student engagement with elegant simplicity.</p>
+                <div class="d-flex justify-content-center gap-3 mt-4">
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'dashboard:index' %}" class="sc-btn sc-btn-primary px-5 py-3 fs-5">Go to Dashboard</a>
+                    {% else %}
+                        <a href="{% url 'accounts:signup' %}" class="sc-btn sc-btn-primary px-5 py-3 fs-5">Get Started Free</a>
+                        <a href="{% url 'accounts:login' %}" class="sc-btn sc-btn-secondary px-5 py-3 fs-5">Log In</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="sc-features-section">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold" style="font-family: var(--font-heading); color: var(--charcoal);">Crafted for Educators</h2>
+            <p class="text-muted">Everything you need to manage your institution gracefully.</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="sc-feature-card">
+                    <h3 class="h5 fw-bold mb-3" style="font-family: var(--font-heading); color: var(--charcoal);">Seamless Attendance</h3>
+                    <p class="text-muted mb-0">Track daily attendance with just a few clicks. Focus more on teaching and less on administrative overhead.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="sc-feature-card">
+                    <h3 class="h5 fw-bold mb-3" style="font-family: var(--font-heading); color: var(--charcoal);">Course Management</h3>
+                    <p class="text-muted mb-0">Organize curriculums, manage enrollments, and structure your academic year effortlessly.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="sc-feature-card">
+                    <h3 class="h5 fw-bold mb-3" style="font-family: var(--font-heading); color: var(--charcoal);">Insightful Dashboard</h3>
+                    <p class="text-muted mb-0">Get a bird's-eye view of your institution's health with beautiful, easy-to-read metrics.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="sc-testimonials-section">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold" style="font-family: var(--font-heading); color: var(--charcoal);">Loved by Institutions</h2>
+        </div>
+        <div class="row g-4 justify-content-center">
+            <div class="col-md-5">
+                <div class="sc-testimonial-card">
+                    <p class="sc-testimonial-quote">"EduTrack transformed how we manage our daily operations. The interface is not just functional; it's a joy to use."</p>
+                    <div class="d-flex align-items-center">
+                        <div class="fw-bold" style="font-family: var(--font-heading); color: var(--charcoal);">Sarah Jenkins</div>
+                        <div class="ms-2 text-muted small">— Dean of Academics</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="sc-testimonial-card">
+                    <p class="sc-testimonial-quote">"We've cut our administrative time in half. The design feels like it was tailor-made for our premium standards."</p>
+                    <div class="d-flex align-items-center">
+                        <div class="fw-bold" style="font-family: var(--font-heading); color: var(--charcoal);">Dr. Robert Chen</div>
+                        <div class="ms-2 text-muted small">— University Director</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="sc-footer">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6 mb-3 mb-md-0">
+                <div class="d-flex align-items-center mb-2">
+                    <span class="fs-4 fw-bold text-white" style="font-family: var(--font-heading);">EduTrack</span>
+                </div>
+                <p class="mb-0 text-white-50 small">&copy; {% now "Y" %} EduTrack Inc. All rights reserved.</p>
+                <p class="mb-0 text-white-50 small mt-1">EduTrack™ and the EduTrack logo are trademarks of EduTrack Inc.</p>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <ul class="list-inline mb-0">
+                    <li class="list-inline-item me-3"><a href="#">Privacy Policy</a></li>
+                    <li class="list-inline-item me-3"><a href="#">Terms of Service</a></li>
+                    <li class="list-inline-item"><a href="#">Contact Support</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</footer>
+{% endblock %}

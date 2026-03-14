@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Enrollments - EduTrack{% endblock %}
+
+{% block header_title %}Enrollments{% endblock %}
+
+{% block header_actions %}
+<a href="#" class="btn sc-btn-primary">New Enrollment</a>
+{% endblock %}
+
+{% block content %}
+<div class="sc-card">
+    {% if enrollments %}
+    <div class="sc-table-container">
+        <table class="sc-table">
+            <thead>
+                <tr>
+                    <th>Student</th>
+                    <th>Course</th>
+                    <th>Enrollment Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for enrollment in enrollments %}
+                <tr>
+                    <td class="fw-bold">{{ enrollment.student.full_name }}</td>
+                    <td>{{ enrollment.course.title }}</td>
+                    <td>{{ enrollment.enrolled_at|date:"M d, Y" }}</td>
+                    <td>
+                        {% if enrollment.is_active %}
+                        <span class="sc-badge sc-badge-success">Active</span>
+                        {% else %}
+                        <span class="sc-badge sc-badge-info">Completed</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="d-flex gap-2">
+                            <a href="#" class="sc-btn sc-btn-secondary py-1 px-2 small">Edit</a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="sc-card-body text-center py-5">
+        <div class="mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="text-muted opacity-25" viewBox="0 0 16 16">
+                <path d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1z"/>
+                <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
+            </svg>
+        </div>
+        <h3 class="h4 font-heading mb-3">No Enrollments Yet</h3>
+        <p class="text-muted mb-4 max-w-72ch mx-auto">It looks like there aren't any students enrolled in courses yet. Start by enrolling a student to track their academic journey.</p>
+        <a href="#" class="sc-btn sc-btn-primary">
+            <span>Create First Enrollment</span>
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

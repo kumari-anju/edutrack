@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if object %}Edit Course{% else %}Add Course{% endif %} - EduTrack{% endblock %}
+
+{% block header_title %}{% if object %}Edit Course{% else %}Add New Course{% endif %}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="sc-card animate-fade-in max-w-72ch mx-auto">
+    <div class="sc-card-header">
+        <h3>{% if object %}Modify Course Details{% else %}Create New Course{% endif %}</h3>
+    </div>
+    <div class="sc-card-body">
+        <form method="post">
+            {% csrf_token %}
+            <div class="sc-form">
+                {% for field in form %}
+                <div class="sc-form-group">
+                    <label for="{{ field.id_for_label }}" class="sc-label">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.help_text %}
+                    <div class="text-secondary small mt-1">{{ field.help_text }}</div>
+                    {% endif %}
+                    {% for error in field.errors %}
+                    <div class="sc-badge sc-badge-error mt-1" style="display: block;">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="d-flex gap-3 mt-4 pt-4 border-top">
+                <button type="submit" class="sc-btn sc-btn-primary flex-grow-1">
+                    {% if object %}Update Course{% else %}Create Course{% endif %}
+                </button>
+                <a href="{% url 'courses:course_list' %}" class="sc-btn sc-btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+
+{% block title %}Student Attendance Report — EduTrack{% endblock %}
+
+{% block header_title %}Student Attendance Report{% endblock %}
+
+{% block header_actions %}
+<a href="{% url 'attendance:mark' %}" class="sc-btn sc-btn-primary">Mark Attendance</a>
+<a href="{% url 'attendance:daily_report' %}" class="sc-btn sc-btn-secondary">Daily Report</a>
+<a href="{% url 'attendance:monthly_report' %}" class="sc-btn sc-btn-secondary">Monthly Report</a>
+{% endblock %}
+
+{% block content %}
+<div class="row g-4 animate-fade-in">
+
+    {# ── Filters ── #}
+    <div class="col-12">
+        <div class="sc-card shadow-low">
+            <div class="sc-card-header">
+                <h4 class="m-0 h5">Filter by Student</h4>
+            </div>
+            <div class="sc-card-body">
+                <form method="get" action="{% url 'attendance:student_report' %}" class="row g-3 align-items-end">
+                    <div class="col-md-9">
+                        <label for="student" class="form-label sc-label">Student</label>
+                        <select name="student" id="student" class="form-select">
+                            <option value="">— Choose a student —</option>
+                            {% for s in students %}
+                            <option value="{{ s.pk }}" {% if selected_student and selected_student.pk == s.pk %}selected{% endif %}>
+                                {{ s.last_name }}, {{ s.first_name }} ({{ s.email }})
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="sc-btn sc-btn-primary w-100">View Report</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {% if selected_student %}
+
+    {# ── Charts ── #}
+    <div class="col-12">
+        <h3 class="mt-2 mb-4 h4" style="color:var(--charcoal);">Attendance Overview for {{ selected_student.first_name }} {{ selected_student.last_name }}</h3>
+        <script>
+            // Data exposed from the backend
+            const chartData = JSON.parse('{{ chart_data_json|escapejs }}');
+        </script>
+        
+        <div class="row g-4">
+            {# Daywise Chart #}
+            <div class="col-12 col-lg-6">
+                <div class="sc-card shadow-mid h-100">
+                    <div class="sc-card-header">
+                        <h4 class="m-0 h5">Daywise (Last 14 Sessions)</h4>
+                    </div>
+                    <div class="sc-card-body">
+                        <canvas id="daywiseChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            {# Weekly Chart #}
+            <div class="col-12 col-lg-6">
+                <div class="sc-card shadow-mid h-100">
+                    <div class="sc-card-header">
+                        <h4 class="m-0 h5">Weekly (Last 12 Weeks)</h4>
+                    </div>
+                    <div class="sc-card-body">
+                        <canvas id="weeklyChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            {# Monthly Chart #}
+            <div class="col-12">
+                <div class="sc-card shadow-mid">
+                    <div class="sc-card-header">
+                        <h4 class="m-0 h5">Monthly (Last 6 Months)</h4>
+                    </div>
+                    <div class="sc-card-body" style="height: 350px;">
+                        <canvas id="monthlyChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# ── Chart.js Script ── #}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Colors matching Studio Chalk
+            const clrPresent = '#7C9A82'; // Sage
+            const clrAbsent = '#C95E76'; // Rose
+            const clrLate = '#E7B84B'; // Gold
+            
+            const chartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        stacked: true,
+                        grid: { display: false }
+                    },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true,
+                        ticks: { stepSize: 1 }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            font: {
+                                family: "'IBM Plex Sans', sans-serif"
+                            }
+                        }
+                    }
+                }
+            };
+
+            function createChart(ctxId, dataObj) {
+                const ctx = document.getElementById(ctxId).getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: dataObj.labels,
+                        datasets: [
+                            {
+                                label: 'Present',
+                                data: dataObj.present,
+                                backgroundColor: clrPresent,
+                                borderRadius: 4,
+                            },
+                            {
+                                label: 'Late',
+                                data: dataObj.late,
+                                backgroundColor: clrLate,
+                                borderRadius: 4,
+                            },
+                            {
+                                label: 'Absent',
+                                data: dataObj.absent,
+                                backgroundColor: clrAbsent,
+                                borderRadius: 4,
+                            }
+                        ]
+                    },
+                    options: chartOptions
+                });
+            }
+
+            if (chartData.daywise.labels.length > 0) {
+                createChart('daywiseChart', chartData.daywise);
+            }
+            if (chartData.weekly.labels.length > 0) {
+                createChart('weeklyChart', chartData.weekly);
+            }
+            if (chartData.monthly.labels.length > 0) {
+                createChart('monthlyChart', chartData.monthly);
+            }
+        });
+    </script>
+
+    {% else %}
+    <div class="col-12">
+        <div class="sc-card shadow-low text-center p-5" style="border-style:dashed;">
+            <p class="sc-helper-text mb-0">Select a student above to view their attendance charts.</p>
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

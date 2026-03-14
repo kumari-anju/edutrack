@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block title %}Welcome to EduTrack{% endblock %}
+
+{% block header_title %}Welcome, Educator{% endblock %}
+
+{% block content %}
+<div class="row g-4 animate-fade-in">
+    <!-- Hero Section -->
+    <div class="col-12">
+        <div class="sc-card shadow-mid" style="background: linear-gradient(135deg, var(--paper) 0%, var(--chalk-deep) 100%); border: none;">
+            <div class="sc-card-body px-5 py-5 text-center">
+                <h1 class="display-3 font-heading mb-4" style="color: var(--charcoal); letter-spacing: -0.03em;">
+                    Empowering Every <span style="color: var(--terracotta);">Educator</span>.
+                </h1>
+                <p class="lead text-secondary max-w-72ch mx-auto mb-5">
+                    Streamline your classroom management, track student progress with precision, and focus on what matters most: teaching future leaders.
+                </p>
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="{% url 'students:list' %}" class="sc-btn sc-btn-primary px-5 py-3 h5 mb-0">View Students</a>
+                    <a href="{% url 'accounts:profile' %}" class="sc-btn sc-btn-secondary px-5 py-3 h5 mb-0">My Dashboard</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="col-md-4">
+        <div class="sc-card h-100">
+            <div class="sc-card-header">
+                <h3>Student Records</h3>
+            </div>
+            <div class="sc-card-body">
+                <p class="text-secondary">Maintain detailed profiles, attendance, and performance metrics in one centralized, calm location.</p>
+                <a href="{% url 'students:list' %}" class="sc-btn sc-btn-secondary py-2 small">Manage Records</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="sc-card h-100">
+            <div class="sc-card-header" style="background: rgba(111, 163, 217, 0.1);">
+                <h3 style="color: var(--sky);">Course Planning</h3>
+            </div>
+            <div class="sc-card-body">
+                <p class="text-secondary">Organize your curriculum with our intuitive desk-grade tools (Coming Soon).</p>
+                <span class="sc-badge sc-badge-info">Stay Tuned</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="sc-card h-100">
+            <div class="sc-card-header" style="background: rgba(124, 154, 130, 0.1);">
+                <h3 style="color: var(--sage);">Insights & Analytics</h3>
+            </div>
+            <div class="sc-card-body">
+                <p class="text-secondary">Visualize trends and identify students who need extra support with ease.</p>
+                <span class="sc-badge sc-badge-success">Premium Tool</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* In-page styling for the hero text */
+    .hero-accent {
+        position: relative;
+        display: inline-block;
+    }
+    .hero-accent::after {
+        content: '';
+        position: absolute;
+        bottom: 8px;
+        left: 0;
+        width: 100%;
+        height: 12px;
+        background: var(--terracotta);
+        opacity: 0.15;
+        z-index: -1;
+    }
+</style>
+{% endblock %}

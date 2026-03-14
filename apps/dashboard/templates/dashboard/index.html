@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - EduTrack{% endblock %}
+
+{% block header_title %}System Overview{% endblock %}
+
+{% block content %}
+<div class="row g-4 animate-fade-in">
+    <!-- Metric Cards -->
+    <div class="col-md-3">
+        <div class="sc-card shadow-mid">
+            <div class="sc-card-header">
+                <h4 class="m-0 h5">Total Students</h4>
+            </div>
+            <div class="sc-card-body py-4 text-center">
+                <div class="display-4 fw-bold text-primary mb-2" style="color: var(--terracotta) !important;">
+                    {{ total_students }}
+                </div>
+                <p class="sc-helper-text mb-0">Active student records</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="sc-card shadow-mid">
+            <div class="sc-card-header">
+                <h4 class="m-0 h5">Total Courses</h4>
+            </div>
+            <div class="sc-card-body py-4 text-center">
+                <div class="display-4 fw-bold text-primary mb-2" style="color: var(--sky) !important;">
+                    {{ total_courses }}
+                </div>
+                <p class="sc-helper-text mb-0">Offered curriculum</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="sc-card shadow-mid">
+            <div class="sc-card-header">
+                <h4 class="m-0 h5">Total Enrollments</h4>
+            </div>
+            <div class="sc-card-body py-4 text-center">
+                <div class="display-4 fw-bold text-primary mb-2" style="color: var(--sage) !important;">
+                    {{ total_enrollments }}
+                </div>
+                <p class="sc-helper-text mb-0">Student-course assignments</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Attendance card -->
+    <div class="col-md-3">
+        <div class="sc-card shadow-mid">
+            <div class="sc-card-header">
+                <h4 class="m-0 h5">Today's Attendance</h4>
+            </div>
+            <div class="sc-card-body py-4 text-center">
+                <div class="display-4 fw-bold mb-2" style="color: var(--gold) !important;">
+                    {{ today_attendance }}
+                </div>
+                <p class="sc-helper-text mb-0">Records marked today</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="col-12 mt-5">
+        <div class="sc-card">
+            <div class="sc-card-header">
+                <h4 class="m-0 h5">Quick Actions</h4>
+            </div>
+            <div class="sc-card-body">
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="{% url 'students:create' %}" class="sc-btn sc-btn-primary">Add New Student</a>
+                    <a href="{% url 'courses:course_create' %}" class="sc-btn sc-btn-secondary">Create New Course</a>
+                    <a href="{% url 'enrollments:create' %}" class="sc-btn sc-btn-secondary">Enroll Student</a>
+                    <a href="{% url 'attendance:mark' %}" class="sc-btn sc-btn-secondary">Mark Attendance</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block title %}Mark Attendance — EduTrack{% endblock %}
+
+{% block header_title %}Mark Attendance{% endblock %}
+
+{% block header_actions %}
+<a href="{% url 'attendance:daily_report' %}" class="sc-btn sc-btn-secondary">Daily Report</a>
+<a href="{% url 'attendance:monthly_report' %}" class="sc-btn sc-btn-secondary">Monthly Report</a>
+{% endblock %}
+
+{% block content %}
+<div class="row g-4 animate-fade-in">
+
+    {# ── Course + Date selector ── #}
+    <div class="col-12">
+        <div class="sc-card shadow-low">
+            <div class="sc-card-header">
+                <h4 class="m-0 h5">Select Course &amp; Date</h4>
+            </div>
+            <div class="sc-card-body">
+                <form method="get" action="{% url 'attendance:mark' %}" class="row g-3 align-items-end">
+                    <div class="col-md-5">
+                        <label for="course" class="form-label sc-label">Course</label>
+                        <select name="course" id="course" class="form-select">
+                            <option value="">— Choose a course —</option>
+                            {% for c in courses %}
+                            <option value="{{ c.pk }}" {% if selected_course and selected_course.pk == c.pk %}selected{% endif %}>{{ c.title }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="date" class="form-label sc-label">Session Date</label>
+                        <input type="date" name="date" id="date" class="form-control"
+                               value="{{ selected_date|date:'Y-m-d' }}">
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="sc-btn sc-btn-primary w-100">Load Students</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {# ── Attendance sheet ── #}
+    {% if selected_course %}
+    <div class="col-12">
+        <div class="sc-card shadow-mid">
+            <div class="sc-card-header d-flex justify-content-between align-items-center">
+                <h4 class="m-0 h5">
+                    {{ selected_course.title }}
+                    <span class="sc-badge" style="background:var(--chalk-deep); color:var(--ink-soft); font-size:0.75rem; font-weight:500; padding:3px 10px; border-radius:999px;">
+                        {{ selected_date|date:"D, d M Y" }}
+                    </span>
+                </h4>
+                <span class="sc-helper-text">{{ enrollments|length }} enrolled student(s)</span>
+            </div>
+
+            <div class="sc-card-body p-0">
+                {% if enrollments %}
+                <form method="post" action="{% url 'attendance:mark' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="course" value="{{ selected_course.pk }}">
+                    <input type="hidden" name="date" value="{{ selected_date|date:'Y-m-d' }}">
+
+                    <table class="sc-table w-100 mb-0">
+                        <thead>
+                            <tr>
+                                <th style="width:40%">Student</th>
+                                <th style="width:25%">Status</th>
+                                <th>Notes <span class="sc-helper-text">(optional)</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for enrollment in enrollments %}
+                            {% with att=existing|default_if_none:'' %}
+                            <tr>
+                                <td class="fw-500" style="color:var(--charcoal);">
+                                    {{ enrollment.student.first_name }} {{ enrollment.student.last_name }}
+                                    <div class="sc-helper-text" style="font-size:0.78rem;">{{ enrollment.student.email }}</div>
+                                </td>
+                                <td>
+                                    <select name="status_{{ enrollment.pk }}" class="form-select form-select-sm">
+                                        {% for val, label in status_choices %}
+                                        <option value="{{ val }}"
+                                            {% if existing and existing|default:'' %}
+                                                {% with rec=existing|default:'' %}{% endwith %}
+                                            {% endif %}
+                                        >{{ label }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="text" name="notes_{{ enrollment.pk }}" class="form-control form-control-sm"
+                                           placeholder="Optional note…">
+                                </td>
+                            </tr>
+                            {% endwith %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                    <div class="p-3 border-top" style="border-color:var(--line)!important;">
+                        <button type="submit" class="sc-btn sc-btn-primary">Save Attendance</button>
+                    </div>
+                </form>
+
+                {% else %}
+                <div class="p-4 text-center">
+                    <p class="sc-helper-text mb-0">No enrolled students found for this course.</p>
+                    <a href="{% url 'enrollments:create' %}" class="sc-btn sc-btn-secondary mt-3">Enroll a Student</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="col-12">
+        <div class="sc-card shadow-low text-center p-5" style="border-style:dashed;">
+            <p class="sc-helper-text mb-0">Select a course and date above to start marking attendance.</p>
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

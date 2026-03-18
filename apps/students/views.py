@@ -18,14 +18,14 @@ class StudentCreateView(LoginRequiredMixin, CreateView):
     """View class to register a new student."""
     model = Student
     template_name = 'students/student_form.html'
-    fields = ['first_name', 'last_name', 'email', 'grade_level', 'is_active']
+    fields = ['student_id', 'first_name', 'last_name', 'email', 'grade_level', 'is_active']
     success_url = reverse_lazy('students:list')
 
 class StudentUpdateView(LoginRequiredMixin, UpdateView):
     """View class to update student information."""
     model = Student
     template_name = 'students/student_form.html'
-    fields = ['first_name', 'last_name', 'email', 'grade_level', 'is_active']
+    fields = ['student_id', 'first_name', 'last_name', 'email', 'grade_level', 'is_active']
     success_url = reverse_lazy('students:list')
 
 class StudentDeleteView(LoginRequiredMixin, DeleteView):

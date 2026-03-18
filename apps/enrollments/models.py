@@ -12,7 +12,7 @@ class Enrollment(models.Model):
         ('DROPPED', 'Dropped'),
     ]
 
-    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='enrollments')
+    student = models.OneToOneField(Student, on_delete=models.CASCADE, related_name='enrollment')
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='enrollments')
     enrollment_date = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='ENROLLED')

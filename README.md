@@ -92,3 +92,4 @@ To maintain a high-quality codebase, EduTrack follows these standards:
 Detailed implementation steps and architectural decisions can be found in the `docs/` directory:
 - [To-Start (Pending)](file:///Users/anju/EduTrack/docs/to_start/)
 - [Completed](file:///Users/anju/EduTrack/docs/completed/)
+
